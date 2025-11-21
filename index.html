@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chút mừn cin nhậc ❤️</title>
+	<!-- Tailwind CSS -->
+	<script src="https://cdn.tailwindcss.com"></script>
+	<!-- Google Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+	<!-- FontAwesome Icons -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+	<script>
+		tailwind.config = {
+			theme: {
+				extend: {
+					colors: {
+						pastelPink: '#ffe4e6',
+						pastelDark: '#fda4af',
+						pastelRed: '#f43f5e',
+						deepLove: '#be185d'
+					},
+					fontFamily: {
+						script: ['"Dancing Script"', 'cursive'],
+						body: ['"Nunito"', 'sans-serif'],
+					},
+					animation: {
+						'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+						'pop': 'pop 0.6s ease-out forwards',
+					},
+					keyframes: {
+						shake: {
+							'10%, 90%': { transform: 'translate3d(-1px, 0, 0)' },
+							'20%, 80%': { transform: 'translate3d(2px, 0, 0)' },
+							'30%, 50%, 70%': { transform: 'translate3d(-4px, 0, 0)' },
+							'40%, 60%': { transform: 'translate3d(4px, 0, 0)' }
+						},
+						pop: {
+							'0%': { transform: 'scale(0) translate(0, 0)', opacity: '1' },
+							'100%': { transform: 'scale(1.5) translate(var(--tw-translate-x), var(--tw-translate-y))', opacity: '0' }
+						}
+					}
+				}
+			}
+		}
+	</script>
+
+	<style>
+		body {
+			background: linear-gradient(135deg, #fff0f3 0%, #ffe4e6 100%);
+			overflow-x: hidden;
+			user-select: none; 
+			-webkit-user-select: none;
+		}
+
+		/* Custom Scrollbar cho bức thư dài */
+		.custom-scrollbar::-webkit-scrollbar {
+			width: 6px;
+		}
+		.custom-scrollbar::-webkit-scrollbar-track {
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 10px;
+		}
+		.custom-scrollbar::-webkit-scrollbar-thumb {
+			background: #fda4af; /* Màu hồng pastel */
+			border-radius: 10px;
+		}
+		.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+			background: #f43f5e;
+		}
+
+		/* Hiệu ứng trái tim rơi (Rain) */
+		.heart-fall {
+			position: fixed;
+			top: -10vh;
+			font-size: 1.5rem;
+			color: #f43f5e;
+			opacity: 0.8;
+			z-index: 0;
+			animation: fall linear forwards;
+			pointer-events: none;
+		}
+
+		@keyframes fall {
+			0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 1; }
+			100% { transform: translateY(110vh) rotate(360deg) translateX(50px); opacity: 0; }
+		}
+
+		/* Hiệu ứng trái tim nổ (Explosion) */
+		.heart-pop {
+			position: fixed;
+			/* Vị trí sẽ được set bằng JS */
+			font-size: 1.5rem;
+			z-index: 60; 
+			pointer-events: none;
+			opacity: 0;
+		}
+
+		/* Card Glassmorphism */
+		.glass-card {
+			background: rgba(255, 255, 255, 0.75); /* Tăng độ đục một chút để đọc chữ dễ hơn */
+			backdrop-filter: blur(12px);
+			-webkit-backdrop-filter: blur(12px);
+			border: 1px solid rgba(255, 255, 255, 0.8);
+			box-shadow: 0 8px 32px 0 rgba(255, 154, 162, 0.2);
+		}
+
+		/* Animation rung nhẹ cho ảnh */
+		@keyframes float {
+			0% { transform: translateY(0px); }
+			50% { transform: translateY(-10px); }
+			100% { transform: translateY(0px); }
+		}
+		.floating-img {
+			animation: float 4s ease-in-out infinite;
+		}
+
+		/* Animation xoay đĩa nhạc */
+		@keyframes spin-slow {
+			from { transform: rotate(0deg); }
+			to { transform: rotate(360deg); }
+		}
+		.animate-spin-slow {
+			animation: spin-slow 3s linear infinite;
+		}
+
+		/* Keypad styling */
+		.keypad-btn {
+			background: rgba(255, 255, 255, 0.5);
+			transition: all 0.2s;
+		}
+		.keypad-btn:active {
+			background: rgba(244, 63, 94, 0.2);
+			transform: scale(0.9);
+		}
+	</style>
+</head>
+<body class="font-body text-gray-700 min-h-screen flex items-center justify-center relative transition-transform duration-100">
+
+	<!-- ==================== MÀN HÌNH KHÓA ==================== -->
+	<section id="lock-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-pink-50/95 backdrop-blur-md transition-all duration-700">
+		<div class="text-center mb-8">
+			<div class="w-20 h-20 bg-pink-200 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce shadow-inner text-white text-3xl">
+				<i class="fas fa-lock"></i>
+			</div>
+			<h2 class="text-2xl font-bold text-deepLove mb-1">Nhập Mật Khẩu <br>🔑💖</h2>
+			<p class="text-sm text-pastelRed italic">Gợi ý: Đố biết đấy =)))))</p>
+		</div>
+
+		<div class="flex gap-4 mb-8 min-h-[20px]" id="password-dots">
+			<div class="w-4 h-4 rounded-full border-2 border-pastelRed bg-transparent transition-all duration-200"></div>
+			<div class="w-4 h-4 rounded-full border-2 border-pastelRed bg-transparent transition-all duration-200"></div>
+			<div class="w-4 h-4 rounded-full border-2 border-pastelRed bg-transparent transition-all duration-200"></div>
+			<div class="w-4 h-4 rounded-full border-2 border-pastelRed bg-transparent transition-all duration-200"></div>
+		</div>
+
+		<div class="grid grid-cols-3 gap-6 max-w-xs w-full px-8">
+			<button onclick="addDigit('1')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">1</button>
+			<button onclick="addDigit('2')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">2</button>
+			<button onclick="addDigit('3')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">3</button>
+			<button onclick="addDigit('4')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">4</button>
+			<button onclick="addDigit('5')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">5</button>
+			<button onclick="addDigit('6')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">6</button>
+			<button onclick="addDigit('7')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">7</button>
+			<button onclick="addDigit('8')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">8</button>
+			<button onclick="addDigit('9')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">9</button>
+			<div class="w-16 h-16"></div>
+			<button onclick="addDigit('0')" class="keypad-btn w-16 h-16 rounded-full text-2xl font-bold text-deepLove shadow-sm">0</button>
+			<button onclick="deleteDigit()" class="w-16 h-16 rounded-full text-xl font-bold text-pastelRed flex items-center justify-center hover:bg-pink-100 transition">
+				<i class="fas fa-backspace"></i>
+			</button>
+		</div>
+	</section>
+
+	<!-- ==================== NỘI DUNG CHÍNH ==================== -->
+	<main id="main-content" class="relative z-10 w-full max-w-md px-4 py-8 text-center hidden opacity-0 transition-opacity duration-1000">
+		
+		<!-- Khung ảnh avatar -->
+		<div class="relative w-48 h-48 mx-auto mb-6 floating-img group cursor-pointer">
+			<div class="absolute inset-0 bg-gradient-to-tr from-pink-300 to-red-300 rounded-full blur-lg opacity-70 group-hover:opacity-100 transition duration-500"></div>
+			<img src="https://scontent.fhan14-1.fna.fbcdn.net/v/t39.30808-6/503999347_3216820688476200_4189054799344065978_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_eui2=AeEmWQDbu2Ou0_S2grgwzXxnJrXUCzQdXlsmtdQLNB1eW3xAZ-px04bAMj5LblcpR12YgJCuRHtuBl8y6D8pkolm&_nc_ohc=Hz2AGSTJNr8Q7kNvwHMHTx-&_nc_oc=AdlD5mrRfLMm-sNdq2sCIEyytTxvM18F7JR6Ztiw96dHbE9anAOLUWsEtUL9d4Ueg6A&_nc_zt=23&_nc_ht=scontent.fhan14-1.fna&_nc_gid=6RPMl7M65zLMI-dghMho_Q&oh=00_Afi5QR5MytzWkNkMWFbot04330rFg5i3FS9pG3j0Yi6xDg&oe=69251E7F" 
+				 alt="My Love" 
+				 class="relative w-full h-full object-cover rounded-full border-4 border-white shadow-xl transform transition duration-500 group-hover:scale-105">
+			<div class="absolute -bottom-2 -right-2 bg-white p-2 rounded-full shadow text-red-500">
+				<i class="fas fa-heart animate-pulse"></i>
+			</div>
+		</div>
+
+		<h1 class="font-script text-5xl font-bold text-deepLove mb-2 drop-shadow-sm">
+			Happy Birthdayy hehe!!! <br>🎁💩
+		</h1>
+		<h2 class="text-xl text-pastelRed font-semibold mb-6">
+			Gửi Linh nháaa ❤️
+		</h2>
+
+		<div class="flex flex-col gap-4">
+			<!-- Thêm event vào openModal để bắt tọa độ click -->
+			<button onclick="openModal('wish', event)" class="bg-white text-pastelRed hover:bg-pastelRed hover:text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:-translate-y-1 hover:shadow-xl transition duration-300 flex items-center justify-center gap-3 group">
+				<i class="fas fa-envelope-open-text text-xl group-hover:animate-bounce"></i>
+				<span>Xin Mời Đọc Thư Cụa Anhh 💌</span>
+			</button>
+
+			<button onclick="openModal('gallery')" class="bg-white text-pink-500 hover:bg-pink-500 hover:text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:-translate-y-1 hover:shadow-xl transition duration-300 flex items-center justify-center gap-3 group">
+				<i class="fas fa-camera-retro text-xl group-hover:rotate-12 transition"></i>
+				<span>Ở Đây Có Kỷ Niệm ❤️‍🔥❤️‍🔥</span>
+			</button>
+
+			<button onclick="openModal('gift')" class="bg-gradient-to-r from-pink-400 to-red-400 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:-translate-y-1 hover:shadow-xl transition duration-300 flex items-center justify-center gap-3">
+				<i class="fas fa-gift text-xl animate-pulse"></i>
+				<span>Bấm Vào Đây Để Mở Quà Nề 🎁🎁</span>
+			</button>
+		</div>
+
+		<!-- Music Control -->
+		<audio id="bgMusic" loop>
+			<source src="nhac.mp3" type="audio/mpeg">
+		</audio>
+
+		<div onclick="toggleMusic()" class="mt-8 inline-flex items-center gap-3 px-4 py-2 bg-white/50 hover:bg-white rounded-full cursor-pointer shadow-sm hover:shadow-md transition select-none group">
+			<div id="music-icon-wrapper" class="w-8 h-8 flex items-center justify-center bg-pink-100 rounded-full text-pink-500 group-hover:bg-pink-500 group-hover:text-white transition">
+				<i id="music-icon" class="fas fa-play pl-1"></i>
+			</div>
+			<div class="text-left">
+				<p class="text-xs text-gray-500 font-bold">Nhạc Tung Của</p>
+				<p id="music-text" class="text-sm font-script text-deepLove">Bấm để mở nhạc 🎶</p>
+			</div>
+		</div>
+	</main>
+
+	<!-- ==================== MODALS ==================== -->
+	<!-- Modal Lời Chúc (ĐÃ CẬP NHẬT: SCROLL + CĂN TRÁI) -->
+	<div id="modal-wish" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+		<!-- Thêm max-h và flex-col để xử lý scroll -->
+		<div class="glass-card p-6 rounded-3xl max-w-sm w-full relative flex flex-col max-h-[70vh] transform transition-all scale-95 opacity-0" id="modal-wish-content">
+			
+			<!-- Nút đóng cố định góc phải -->
+			<button onclick="closeModal('wish')" class="absolute top-4 right-4 z-10 text-gray-400 hover:text-red-500 transition bg-white/50 rounded-full p-1 shadow-sm">
+				<i class="fas fa-times text-xl w-6 h-6 flex items-center justify-center"></i>
+			</button>
+
+			<!-- Vùng nội dung cuộn -->
+			<div class="overflow-y-auto custom-scrollbar pr-2 mt-4">
+				<div class="text-center">
+					<div class="text-4xl text-pink-500 mb-4 animate-pulse"><i class="fas fa-quote-left"></i></div>
+					
+					<!-- Đổi text-center thành text-left -->
+					<p class="text-left text-lg leading-relaxed text-gray-700 mb-6 font-medium whitespace-pre-line">
+						Chúc mừng sinh nhật công trúa cụa tôi!!! 🎂 <br><br>Tuổi mới tròn 18 roi nhá 🎁🎁 Chúc Linh luôn cinh đẹp tuyệt vời nàyy. Đặc biệt là chúc phải nghe lời 😈🔞 thoi trêu:). Chúc tất cả mọi điều năm nay em gặp sẽ đều là may mắn nay. Chúc Linhh tuổi mới phải cười nhiều hơn nữa nha, phải cười nhiều hơn nữaa. Mọi điều tốt đẹp nhất sẽ đến với emm ❤️‍🔥 <br><br>May là sinh nhật lần này anh kịp làm em cười 😭.. Nhưng đừng giận anh nha, anh sẽ cố gắng vun vén lại từ đầu, có thể là lại mất thời gian đấy.. Nhưng mọi thứ sẽ tốt hơn mà đúng khong. Mình đang ở tuổi đẹp nhất của nhau, anh không muốn vì không hiểu nhau hay là giận hờn gì mà bỏ lỡ mất. Anh yêu em từ những gì đơn giản nhất, chẳng có ràng buộc hay gánh nặng gì, nhưng anh tin là không phải vì thế mà không bền. Trông thế chứ còn đón sinh nhật cùng em dài dài 💀💀 Sau mỗi lần quyết định lầm lỗi, anh lại càng thấy mình lớn hơn được một tẹo, nên là mong lần này anh vẫn sẽ đúng.. đúng vì dám nói lời quay lại với em 😥 <br><br>Tuy anh nghĩ là lần này anh quay lại muộn quá, để em suy sụp đến vậy rồi mới dám nói. Nhưng mà mong là anh sẽ chữa lại được những lỗi sai của mình, bù đắp lại được nhưng ngày anh làm em tổn thương.. <br><br>
+Thời gian làm con người ta tới trễ <br><br>Nhưng vẫn dành cho ta một lối về <br><br>Thời gian nói những bí mật không kể <br><br>Giấu ta đi khỏi tất cả bộn bề.. <br><br> dáp bơ đấy nma chưa suy hết bài đã quay lại rồi 👁️👁️
+iu lắm đấy trời ;"((((("
+					</p>
+					
+					<div class="text-right text-sm text-gray-500 font-bold mt-4 border-t border-pink-200 pt-2">- Tú cụa em -</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Modal Gallery -->
+	<div id="modal-gallery" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+		<div class="glass-card p-4 rounded-3xl max-w-md w-full relative transform transition-all scale-95 opacity-0 flex flex-col items-center" id="modal-gallery-content">
+			<button onclick="closeModal('gallery')" class="absolute top-2 right-4 text-gray-500 hover:text-red-500 transition z-10 bg-white/50 rounded-full p-1">
+				<i class="fas fa-times text-xl"></i>
+			</button>
+			<h3 class="font-script text-3xl text-deepLove mb-4 mt-2">Kỷ Niệm Chhh ❤️‍🔥</h3>
+			<div class="relative w-full aspect-[4/5] rounded-2xl overflow-hidden shadow-inner bg-pink-50 mb-4 group">
+				<img id="gallery-image" src="" alt="Memories" class="w-full h-full object-cover transition duration-500 transform group-hover:scale-105">
+				<button onclick="prevSlide()" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/80 text-gray-800 p-2 rounded-full backdrop-blur-sm transition"><i class="fas fa-chevron-left"></i></button>
+				<button onclick="nextSlide()" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/30 hover:bg-white/80 text-gray-800 p-2 rounded-full backdrop-blur-sm transition"><i class="fas fa-chevron-right"></i></button>
+			</div>
+			<p id="gallery-caption" class="text-center font-bold text-pastelRed text-lg italic min-h-[3rem] flex items-center justify-center">Loading...</p>
+			<div class="flex gap-2 mt-2" id="gallery-dots"></div>
+		</div>
+	</div>
+
+	<!-- Modal Món Quà -->
+	<div id="modal-gift" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+		<div class="glass-card p-8 rounded-3xl max-w-sm w-full relative text-center transform transition-all scale-95 opacity-0" id="modal-gift-content">
+			<button onclick="closeModal('gift')" class="absolute top-4 right-4 text-gray-400 hover:text-red-500 transition">
+				<i class="fas fa-times text-2xl"></i>
+			</button>
+			<h3 class="font-script text-3xl text-deepLove mb-4">Voucher Tềnh Yêu</h3>
+			<div class="bg-pink-50 border-2 border-dashed border-pink-300 p-4 rounded-xl mb-6">
+				<i class="fas fa-ticket-alt text-4xl text-pink-400 mb-2"></i>
+				<p class="font-bold text-lg text-gray-700">1 BỮA ĂN BÁNH TRÁNG TO ĐÙNGG.. <br>*bánh tráng nào cx dcc!!*</p>
+				<p class="text-xs text-gray-500 mt-1">Hiệu lực: Vô thời hạn *bánh tráng có hạn=)))*</p>
+			</div>
+			<button onclick="alert('Đã lưu voucher vào đầu anh roi nhấ! ❤️')" class="w-full bg-pastelRed text-white py-3 rounded-xl font-bold shadow-md hover:bg-deepLove transition">
+				Nhận Ngay
+			</button>
+		</div>
+	</div>
+
+	<!-- Javascript Logic -->
+	<script>
+		// --- Logic Mật Khẩu ---
+		const SECRET_CODE = "2311";
+		let currentInput = "";
+		const dots = document.querySelectorAll('#password-dots div');
+		const lockScreen = document.getElementById('lock-screen');
+		const mainContent = document.getElementById('main-content');
+
+		function updateDots() {
+			dots.forEach((dot, index) => {
+				if (index < currentInput.length) {
+					dot.classList.remove('bg-transparent'); dot.classList.add('bg-pastelRed');
+				} else {
+					dot.classList.add('bg-transparent'); dot.classList.remove('bg-pastelRed');
+				}
+			});
+		}
+
+		function addDigit(digit) {
+			if (currentInput.length < 4) {
+				currentInput += digit;
+				updateDots();
+				if (currentInput.length === 4) setTimeout(checkPassword, 300);
+			}
+		}
+
+		function deleteDigit() {
+			if (currentInput.length > 0) { currentInput = currentInput.slice(0, -1); updateDots(); }
+		}
+
+		function checkPassword() {
+			if (currentInput === SECRET_CODE) unlockSuccess();
+			else unlockFail();
+		}
+
+		function unlockSuccess() {
+			lockScreen.style.opacity = '0';
+			lockScreen.style.pointerEvents = 'none';
+			setTimeout(() => {
+				lockScreen.style.display = 'none';
+				mainContent.classList.remove('hidden');
+				void mainContent.offsetWidth;
+				mainContent.classList.remove('opacity-0');
+			}, 700);
+		}
+
+		function unlockFail() {
+			const dotsContainer = document.getElementById('password-dots');
+			dotsContainer.classList.add('animate-shake');
+			setTimeout(() => {
+				dotsContainer.classList.remove('animate-shake');
+				currentInput = "";
+				updateDots();
+			}, 500);
+		}
+
+		// --- Logic Mưa Trái Tim (Rain) ---
+		function createHeart() {
+			const heart = document.createElement('div');
+			heart.classList.add('heart-fall');
+			const icons = ['❤️', '💖', '🌸', '🎀', '🐢'];
+			heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+			heart.style.left = Math.random() * 100 + 'vw';
+			heart.style.fontSize = (Math.random() * 1 + 1) + 'rem';
+			const duration = Math.random() * 4 + 3;
+			heart.style.animationDuration = duration + 's';
+			document.body.appendChild(heart);
+			setTimeout(() => { heart.remove(); }, duration * 1000);
+		}
+		setInterval(createHeart, 300);
+
+		// --- Logic Tim Nổ tại vị trí Click (Explosion) ---
+		function triggerExplosion(x, y) {
+			// 1. Rung máy
+			document.body.classList.add('animate-shake');
+			setTimeout(() => { document.body.classList.remove('animate-shake'); }, 500);
+
+			// 2. Bắn 50 tim
+			for (let i = 0; i < 50; i++) {
+				const heart = document.createElement('div');
+				heart.classList.add('heart-pop');
+				const icons = ['❤️', '💖', '💘', '💝', '💓'];
+				heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+				
+				// Set vị trí xuất phát từ tọa độ click
+				if (x !== undefined && y !== undefined) {
+					heart.style.left = x + 'px';
+					heart.style.top = y + 'px';
+				} else {
+					heart.style.left = '50%';
+					heart.style.top = '50%';
+				}
+
+				// Logic tính hướng bay (x, y) ngẫu nhiên
+				const angle = Math.random() * Math.PI * 2; 
+				const velocity = 100 + Math.random() * 250; 
+				const tx = Math.cos(angle) * velocity + 'px';
+				const ty = Math.sin(angle) * velocity + 'px';
+				
+				heart.style.setProperty('--tw-translate-x', tx);
+				heart.style.setProperty('--tw-translate-y', ty);
+				
+				heart.style.fontSize = (Math.random() * 1.5 + 0.5) + 'rem';
+				heart.style.animationDuration = (0.6 + Math.random() * 0.4) + 's';
+
+				document.body.appendChild(heart);
+				setTimeout(() => heart.remove(), 1000);
+			}
+		}
+
+		// --- Data Ảnh ---
+		const memories = [
+			{ src: 'z7247112407622_e93ef39d0e7e835711ca58cfea463ef3.jpg', caption: "Bé như chó 💀🥰" },
+			{ src: 'z7247112327905_b8ca6be1904f9bfc9cb1af4036367cec.jpg', caption: "Pizza pizzaa 🍕🍄‍🟫" },
+			{ src: 'z7247112342809_97b8030ddbf778ebe84cd4caa8791cd5.jpg', caption: "Lớn thêm tí nữa nì 🌏" },
+			{ src: 'z7247112370960_26bfff9336cf5b4746f8ad8d90b4ec7e.jpg', caption: "Nhan sắc 10/10, Răng 30/32" },
+			{ src: 'z7247112300670_6cb0fb3236ca5dd95648226019a6f64b.jpg', caption: "Càng lớn càng xinh 💀💀" },
+			{ src: 'z7247112404454_ba982b29a26e2dd9498c2111d508dd17.jpg', caption: "mắt né 👁️👁️" },
+			{ src: 'z7247112383686_42196c799bc057bf59c4a8d5febbb71f.jpg', caption: "ựaaa 💖💖" },
+			{ src: 'z7247112361473_34ed1349f6d31061926e7c5526ba331d.jpg', caption: "Ảnh đầu tiên em gửi a nề 👁️👁️" },
+			{ src: 'https://photo-resize-zmp3.zadn.vn/w600_r1x1_jpeg/covers/0/d/0d6000b71b9a19c14c7bc5f649798842_1446453727.jpg', caption: "di end 💖💖" },
+		];
+		let currentSlideIndex = 0;
+		function renderSlide() {
+			const img = document.getElementById('gallery-image');
+			const cap = document.getElementById('gallery-caption');
+			const dotsContainer = document.getElementById('gallery-dots');
+			img.src = memories[currentSlideIndex].src;
+			cap.innerText = memories[currentSlideIndex].caption;
+			dotsContainer.innerHTML = '';
+			memories.forEach((_, index) => {
+				const dot = document.createElement('div');
+				dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${index === currentSlideIndex ? 'bg-pastelRed w-4' : 'bg-gray-300'}`;
+				dotsContainer.appendChild(dot);
+			});
+		}
+		function nextSlide() { currentSlideIndex = (currentSlideIndex + 1) % memories.length; renderSlide(); }
+		function prevSlide() { currentSlideIndex = (currentSlideIndex - 1 + memories.length) % memories.length; renderSlide(); }
+
+		// --- Logic Nhạc ---
+		const bgMusic = document.getElementById('bgMusic');
+		const musicIconWrapper = document.getElementById('music-icon-wrapper');
+		const musicIcon = document.getElementById('music-icon');
+		const musicText = document.getElementById('music-text');
+		let isPlaying = false;
+		function toggleMusic() {
+			if (isPlaying) {
+				bgMusic.pause();
+				musicIcon.classList.remove('fa-pause'); musicIcon.classList.add('fa-play', 'pl-1');
+				musicIconWrapper.classList.remove('animate-spin-slow');
+				musicText.innerText = "Bấm để phát nhạc 🎶";
+			} else {
+				bgMusic.play();
+				musicIcon.classList.remove('fa-play', 'pl-1'); musicIcon.classList.add('fa-pause');
+				musicIconWrapper.classList.add('animate-spin-slow');
+				musicText.innerText = "Đang phát: Daylight🎶... ❤️";
+			}
+			isPlaying = !isPlaying;
+		}
+
+		// --- Logic Modal Pop-up ---
+		function openModal(type, event) {
+			if (!isPlaying) toggleMusic();
+			
+			// Bắt tọa độ click cho hiệu ứng nổ
+			if (type === 'wish') {
+				let clientX, clientY;
+				if (event) {
+					if (event.touches && event.touches.length > 0) {
+						clientX = event.touches[0].clientX;
+						clientY = event.touches[0].clientY;
+					} else {
+						clientX = event.clientX;
+						clientY = event.clientY;
+					}
+				}
+				triggerExplosion(clientX, clientY);
+			}
+
+			const modal = document.getElementById(`modal-${type}`);
+			const content = document.getElementById(`modal-${type}-content`);
+			modal.classList.remove('hidden');
+			modal.classList.add('flex');
+			if (type === 'gallery') renderSlide();
+			setTimeout(() => { content.classList.remove('scale-95', 'opacity-0'); content.classList.add('scale-100', 'opacity-100'); }, 10);
+		}
+		function closeModal(type) {
+			const modal = document.getElementById(`modal-${type}`);
+			const content = document.getElementById(`modal-${type}-content`);
+			content.classList.remove('scale-100', 'opacity-100'); content.classList.add('scale-95', 'opacity-0');
+			setTimeout(() => { modal.classList.remove('flex'); modal.classList.add('hidden'); }, 200);
+		}
+		window.onclick = function(event) { if (event.target.id.includes('modal-')) closeModal(event.target.id.split('-')[1]); }
+	</script>
+</body>
+</html>
